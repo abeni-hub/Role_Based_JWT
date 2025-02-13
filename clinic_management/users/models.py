@@ -18,17 +18,29 @@ class User(AbstractUser):
 User = get_user_model()
 
 class Patient(models.Model):
-    receptionist = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'receptionist'})
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15, unique=True)
+    STATUS_CHOICES = [
+        ('registered', 'Registered'),
+        ('waiting_nurse', 'Waiting for Nurse'),
+        ('nurse_checkup', 'Under Nurse Checkup'),
+        ('waiting_doctor', 'Waiting for Doctor'),
+        ('doctor_checkup', 'Under Doctor Checkup'),
+        ('completed', 'Completed Treatment'),
+    ]
+    
+    full_name = models.CharField(max_length=200)  # Full Name
+    age = models.PositiveIntegerField()  # Age
+    sex = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])  # Sex
+    phone_no = models.CharField(max_length=15)  # Phone No
+    card_no = models.CharField(max_length=50, unique=True)  # Card No
+    kebele = models.CharField(max_length=100)  # Kebele
+    region = models.CharField(max_length=100)  # Region
+    wereda = models.CharField(max_length=100)  # Wereda
+
     date_of_birth = models.DateField()
     address = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    registered_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="registered_patients")
+    
+    registered_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="registered_patients")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='registered')
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-    
-
+        return f"{self.full_name} - {self.status}"

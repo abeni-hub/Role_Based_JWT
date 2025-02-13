@@ -120,3 +120,26 @@ def register_patient(request):
         serializer.save()
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_patient_status(request, patient_id):
+    try:
+        patient = Patient.objects.get(id=patient_id)
+    except Patient.DoesNotExist:
+        return Response({"error": "Patient not found"}, status=404)
+
+    new_status = request.data.get("status")
+
+    # Role-based validation
+    if request.user.role == "receptionist" and new_status == "waiting_nurse":
+        patient.status = new_status
+    elif request.user.role == "nurse" and new_status in ["nurse_checkup", "waiting_doctor"]:
+        patient.status = new_status
+    elif request.user.role == "doctor" and new_status in ["doctor_checkup", "completed"]:
+        patient.status = new_status
+    else:
+        return Response({"error": "Unauthorized to update this status"}, status=403)
+
+    patient.save()
+    return Response({"message": f"Patient status updated to {new_status}"}, status=200)
