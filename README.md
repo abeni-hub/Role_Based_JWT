@@ -103,29 +103,29 @@ POST /api/token/refresh/
 
 **👥 Role-Based Access Example**
 
-Admin Role → Can manage users, view all data.
+  - Admin Role → Can manage users, view all data.
 
-User Role → Can only access their own profile.
+  - User Role → Can only access their own profile.
 
-Example Protected Endpoint:
+  - Example Protected Endpoint:
 
-GET /api/admin/dashboard/ → Admin only
+  - GET /api/admin/dashboard/ → Admin only
 
-GET /api/user/profile/ → User only
+  - GET /api/user/profile/ → User only
 
-If a user without permission tries → 403 Forbidden
+  - If a user without permission tries → 403 Forbidden
 
 **🧪 Testing with Postman**
 
-Import the provided Postman Collection (📁 postman_collection.json).
+  - Import the provided Postman Collection (📁 postman_collection.json).
 
-Test endpoints:
+  - Test endpoints:
 
-Register
+  - Register
 
-Login
+  - Login
 
-Access Protected Routes with JWT
+  - Access Protected Routes with JWT
 
 **📬 Contact**
 
